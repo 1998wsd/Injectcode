@@ -100,6 +100,14 @@ public class MapperGenerate implements Generate, crudMethod {
     }
 
     @Override
+    public String count() {
+        return String.format("    <select id=\"get%sCount\" resultType=\"java.lang.Integer\">\n" +
+                "        select count(*)\n" +
+                "        from %s  \n" +
+                "    </select>",className,entityGenerate.getTableName());
+    }
+
+    @Override
     public String update() {
         return String.format("    <update id=\"update%sById\">\n" +
                         "        UPDATE %s SET %s\n" +
@@ -160,6 +168,7 @@ public class MapperGenerate implements Generate, crudMethod {
                 .append(create()).append("\n")
                 .append(createBatch()).append("\n")
                 .append(retrieve()).append("\n")
+                .append(count()).append("\n")
                 .append(retrieveBatch()).append("\n")
                 .append(retrievePagination()).append("\n")
                 .append(update()).append("\n")

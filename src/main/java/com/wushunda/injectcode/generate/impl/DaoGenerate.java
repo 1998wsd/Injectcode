@@ -89,6 +89,7 @@ public class DaoGenerate implements JavaGenerate, crudMethod {
                 .append(create()).append("\n")
                 .append(createBatch()).append("\n")
                 .append(retrieve()).append("\n")
+                .append(count()).append("\n")
                 .append(retrieveBatch()).append("\n")
                 .append(retrievePagination()).append("\n")
                 .append(update()).append("\n")
@@ -129,6 +130,11 @@ public class DaoGenerate implements JavaGenerate, crudMethod {
     @Override
     public String retrievePagination() {
         return String.format("    %s get%sPagination(@Param(\"start\") Integer start , @Param(\"limit\") Integer limit);\n", className, className);
+    }
+
+    @Override
+    public String count() {
+        return String.format("    Integer get%sCount();\n", className);
     }
 
     @Override

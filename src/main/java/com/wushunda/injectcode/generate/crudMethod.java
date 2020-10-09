@@ -29,6 +29,12 @@ public interface crudMethod {
      * 分页查询
      */
     String retrievePagination();
+
+    /**
+     * 获取数量
+     * @return 数量
+     */
+    String count();
     /**
      * 更新单一行
      * @return
