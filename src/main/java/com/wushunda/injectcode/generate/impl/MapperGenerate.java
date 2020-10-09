@@ -57,6 +57,16 @@ public class MapperGenerate implements Generate, crudMethod {
     }
 
     @Override
+    public String createBatch() {
+        return String.format("    <insert id=\"create%sBatch\" >\n" +
+                "        INSERT INTO %s (%s) VALUES\n" +
+                "        <foreach collection =\"list\" item=\"%s\" separator =\",\">\n" +
+                "            (%s)\n" +
+                "         </foreach >\n" +
+                "    </insert>", className, entityGenerate.getTableName(), getColumn(),file,getValues());
+    }
+
+    @Override
     public String retrieve() {
         return String.format("    <select id=\"get%sById\" resultType=\"%s.%s.%s\">\n" +
                         "        SELECT %s\n" +
@@ -64,6 +74,19 @@ public class MapperGenerate implements Generate, crudMethod {
                         "        WHERE %s = #{%s}\n" +
                         "    </select>", className, entityGenerate.getPackageName(), entityGenerate.getEntityPackageName(), className,
                 getColumn(), entityGenerate.getTableName(), primaryKey, file);
+    }
+
+    @Override
+    public String retrieveBatch() {
+        return String.format("    <select id=\"get%sByIdBatch\" resultType=\"%s.%s.%s\">\n" +
+                        "        SELECT %s\n" +
+                        "        FROM %s\n" +
+                        "        WHERE %s IN \n" +
+                        "        <foreach collection=\"list\" open=\"(\" close=\")\" item=\"%s\" separator=\",\">\n" +
+                        "            #{%s}\n" +
+                        "        </foreach>\n" +
+                        "    </select>", className, entityGenerate.getPackageName(), entityGenerate.getEntityPackageName(), className,
+                getColumn(), entityGenerate.getTableName(), primaryKey, file,file);
     }
 
     @Override
@@ -76,12 +99,36 @@ public class MapperGenerate implements Generate, crudMethod {
     }
 
     @Override
+    public String updateBatch() {
+        return String.format("    <update id=\"update%sByIdBatch\">\n" +
+                        "        UPDATE %s SET %s\n" +
+                        "        WHERE %s IN \n" +
+                        "        <foreach collection=\"list\" open=\"(\" close=\")\" item=\"%s\" separator=\",\">\n" +
+                        "            #{%s}\n" +
+                        "        </foreach>\n" +
+                        "    </update>", className, entityGenerate.getTableName(),
+                getUpdateColumn(), primaryKey, file ,file);
+    }
+
+    @Override
     public String deleteById() {
         return String.format("    <delete id=\"delete%sById\">\n" +
                         "        DELETE FROM %s\n" +
                         "        WHERE %s=#{%s}\n" +
                         "    </delete>", className,
                 entityGenerate.getTableName(), primaryKey, file);
+    }
+
+    @Override
+    public String deleteByIdBatch() {
+        return String.format("    <delete id=\"delete%sById\">\n" +
+                        "        DELETE FROM %s\n" +
+                        "        WHERE %s IN\n" +
+                        "        <foreach collection=\"list\" open=\"(\" close=\")\" item=\"%s\" separator=\",\">\n" +
+                        "            #{%s}\n" +
+                        "        </foreach>\n" +
+                        "    </delete>", className,
+                entityGenerate.getTableName(), primaryKey, file,file);
     }
 
     @Override
@@ -101,9 +148,13 @@ public class MapperGenerate implements Generate, crudMethod {
                 "<mapper namespace=\"%s.%s.%s\">", entityGenerate.getPackageName(), daoPackageName, className + "Dao");
         str.append(head).append("\n")
                 .append(create()).append("\n")
+                .append(createBatch()).append("\n")
                 .append(retrieve()).append("\n")
+                .append(retrieveBatch()).append("\n")
                 .append(update()).append("\n")
+                .append(updateBatch()).append("\n")
                 .append(deleteById()).append("\n")
+                .append(deleteByIdBatch()).append("\n")
                 .append(delete()).append("\n")
                 .append("</mapper>");
         return str.toString();
@@ -148,15 +199,17 @@ public class MapperGenerate implements Generate, crudMethod {
      * @return
      */
     private String getUpdateColumn() {
-        StringBuilder str = new StringBuilder();
+        StringBuilder str = new StringBuilder("        <set>\n");
         for (TableFile tableFile : entityGenerate.getTableFiles()) {
-            str.append(tableFile.getColumnName()).append("=")
+            str.append("            <if ").
+                    append(String.format("test=\"%s.%s != null AND %s.%s != ''\"",file,lineToHump(tableFile.getColumnName()),file,lineToHump(tableFile.getColumnName())))
+                    .append(">\n");
+            str.append(tableFile.getColumnName()).append(" = ")
                     .append("#{").append(file)
-                    .append(".").append(lineToHump(tableFile.getColumnName())).append("}").append(",");
+                    .append(".").append(lineToHump(tableFile.getColumnName())).append("}").append(",\n");
+            str.append("            </if>\n");
         }
-        if (str.length() > 0 && COMMA.equals(String.valueOf(str.charAt(str.length() - 1)))) {
-            str.deleteCharAt(str.length() - 1);
-        }
+        str.append("        </set>");
         return str.toString();
     }
 
