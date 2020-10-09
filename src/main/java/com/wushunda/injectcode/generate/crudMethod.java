@@ -26,6 +26,10 @@ public interface crudMethod {
     String retrieveBatch();
 
     /**
+     * 分页查询
+     */
+    String retrievePagination();
+    /**
      * 更新单一行
      * @return
      */

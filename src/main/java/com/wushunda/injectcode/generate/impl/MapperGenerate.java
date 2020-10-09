@@ -16,7 +16,7 @@ public class MapperGenerate implements Generate, crudMethod {
     private static final String COMMA = ",";
     private static final String AND = "AND";
 
-    private EntityGenerate entityGenerate;
+    private final EntityGenerate entityGenerate;
 
     private String primaryKey;
 
@@ -27,11 +27,11 @@ public class MapperGenerate implements Generate, crudMethod {
     /**
      * 类名称
      */
-    private String className;
+    private final String className;
     /**
      * 类变量名
      */
-    private String file;
+    private final String file;
 
 
     public MapperGenerate(EntityGenerate entityGenerate) {
@@ -87,6 +87,16 @@ public class MapperGenerate implements Generate, crudMethod {
                         "        </foreach>\n" +
                         "    </select>", className, entityGenerate.getPackageName(), entityGenerate.getEntityPackageName(), className,
                 getColumn(), entityGenerate.getTableName(), primaryKey, file,file);
+    }
+
+    @Override
+    public String retrievePagination() {
+        return String.format("    <select id=\"get%sById\" resultType=\"%s.%s.%s\">\n" +
+                        "        SELECT %s\n" +
+                        "        FROM %s\n" +
+                        "        LIMIT #{start},#{limit}\n"+
+                        "    </select>", className, entityGenerate.getPackageName(), entityGenerate.getEntityPackageName(), className,
+                getColumn(), entityGenerate.getTableName());
     }
 
     @Override
@@ -151,6 +161,7 @@ public class MapperGenerate implements Generate, crudMethod {
                 .append(createBatch()).append("\n")
                 .append(retrieve()).append("\n")
                 .append(retrieveBatch()).append("\n")
+                .append(retrievePagination()).append("\n")
                 .append(update()).append("\n")
                 .append(updateBatch()).append("\n")
                 .append(deleteById()).append("\n")
