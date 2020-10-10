@@ -16,7 +16,8 @@ public enum DateTypePackageMapping {
     TIME("TIME", "java.sql.Time"),
     TIMESTAMP("TIMESTAMP", "java.sql.Timestamp"),
     YEAR("YEAR", "java.sql.Date"),
-    DECIMAL("SMALLINT", "java.math.BigDecimal");
+    SMALLINT("SMALLINT", "java.math.BigDecimal"),
+    DECIMAL("DECIMAL", "java.math.BigDecimal");
 
     private final String key;
     private final String value;

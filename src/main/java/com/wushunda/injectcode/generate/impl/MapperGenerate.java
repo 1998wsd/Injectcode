@@ -91,7 +91,7 @@ public class MapperGenerate implements Generate, crudMethod {
 
     @Override
     public String retrievePagination() {
-        return String.format("    <select id=\"get%sById\" resultType=\"%s.%s.%s\">\n" +
+        return String.format("    <select id=\"get%sPagination\" resultType=\"%s.%s.%s\">\n" +
                         "        SELECT %s\n" +
                         "        FROM %s\n" +
                         "        LIMIT #{start},#{limit}\n"+
@@ -110,7 +110,8 @@ public class MapperGenerate implements Generate, crudMethod {
     @Override
     public String update() {
         return String.format("    <update id=\"update%sById\">\n" +
-                        "        UPDATE %s SET %s\n" +
+                        "        UPDATE %s \n" +
+                        "        %s\n" +
                         "        WHERE %s = #{%s}\n" +
                         "    </update>", className, entityGenerate.getTableName(),
                 getUpdateColumn(), primaryKey, file + "." + lineToHump(primaryKey));
@@ -119,7 +120,8 @@ public class MapperGenerate implements Generate, crudMethod {
     @Override
     public String updateBatch() {
         return String.format("    <update id=\"update%sByIdBatch\">\n" +
-                        "        UPDATE %s SET %s\n" +
+                        "        UPDATE %s \n" +
+                        "        %s\n" +
                         "        WHERE %s IN \n" +
                         "        <foreach collection=\"list\" open=\"(\" close=\")\" item=\"%s\" separator=\",\">\n" +
                         "            #{%s}\n" +
@@ -139,7 +141,7 @@ public class MapperGenerate implements Generate, crudMethod {
 
     @Override
     public String deleteByIdBatch() {
-        return String.format("    <delete id=\"delete%sById\">\n" +
+        return String.format("    <delete id=\"delete%sByIdBatch\">\n" +
                         "        DELETE FROM %s\n" +
                         "        WHERE %s IN\n" +
                         "        <foreach collection=\"list\" open=\"(\" close=\")\" item=\"%s\" separator=\",\">\n" +
@@ -165,16 +167,16 @@ public class MapperGenerate implements Generate, crudMethod {
                 "\n" +
                 "<mapper namespace=\"%s.%s.%s\">", entityGenerate.getPackageName(), daoPackageName, className + "Dao");
         str.append(head).append("\n")
-                .append(create()).append("\n")
-                .append(createBatch()).append("\n")
-                .append(retrieve()).append("\n")
-                .append(count()).append("\n")
-                .append(retrieveBatch()).append("\n")
-                .append(retrievePagination()).append("\n")
-                .append(update()).append("\n")
-                .append(updateBatch()).append("\n")
-                .append(deleteById()).append("\n")
-                .append(deleteByIdBatch()).append("\n")
+                .append(create()).append("\n\n")
+                .append(createBatch()).append("\n\n")
+                .append(retrieve()).append("\n\n")
+                .append(count()).append("\n\n")
+                .append(retrieveBatch()).append("\n\n")
+                .append(retrievePagination()).append("\n\n")
+                .append(update()).append("\n\n")
+                .append(updateBatch()).append("\n\n")
+                .append(deleteById()).append("\n\n")
+                .append(deleteByIdBatch()).append("\n\n")
                 .append(delete()).append("\n")
                 .append("</mapper>");
         return str.toString();
@@ -219,12 +221,12 @@ public class MapperGenerate implements Generate, crudMethod {
      * @return
      */
     private String getUpdateColumn() {
-        StringBuilder str = new StringBuilder("        <set>\n");
+        StringBuilder str = new StringBuilder("<set>\n");
         for (TableFile tableFile : entityGenerate.getTableFiles()) {
             str.append("            <if ").
                     append(String.format("test=\"%s.%s != null AND %s.%s != ''\"",file,lineToHump(tableFile.getColumnName()),file,lineToHump(tableFile.getColumnName())))
                     .append(">\n");
-            str.append(tableFile.getColumnName()).append(" = ")
+            str.append("            ").append(tableFile.getColumnName()).append(" = ")
                     .append("#{").append(file)
                     .append(".").append(lineToHump(tableFile.getColumnName())).append("}").append(",\n");
             str.append("            </if>\n");
