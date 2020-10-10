@@ -1,6 +1,6 @@
 package com.wushunda.injectcode;
 
-import com.wushunda.injectcode.entity.TableFile;
+import com.wushunda.injectcode.tableFile.TableFile;
 import com.wushunda.injectcode.file.JavaFileOperator;
 import com.wushunda.injectcode.generate.Generate;
 import com.wushunda.injectcode.generate.impl.DaoGenerate;

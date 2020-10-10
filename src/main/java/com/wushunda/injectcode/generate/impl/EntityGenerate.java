@@ -1,6 +1,6 @@
 package com.wushunda.injectcode.generate.impl;
 
-import com.wushunda.injectcode.entity.TableFile;
+import com.wushunda.injectcode.tableFile.TableFile;
 import com.wushunda.injectcode.enums.DateTypeMapping;
 import com.wushunda.injectcode.enums.DateTypePackageMapping;
 import com.wushunda.injectcode.generate.JavaGenerate;

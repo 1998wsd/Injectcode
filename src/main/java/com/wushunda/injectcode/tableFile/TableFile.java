@@ -1,4 +1,4 @@
-package com.wushunda.injectcode.entity;
+package com.wushunda.injectcode.tableFile;
 
 import java.math.BigInteger;
 

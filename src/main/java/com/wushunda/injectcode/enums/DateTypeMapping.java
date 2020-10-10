@@ -29,6 +29,7 @@ public enum DateTypeMapping {
     TIME("TIME", "TIME"),
     DATETIME("DATETIME", "Timestamp"),
     TIMESTAMP("TIMESTAMP", "Timestamp"),
+    MEDIUMTEXT("MEDIUMTEXT","String"),
     YEAR("BOOLEAN", "Date");
 
     private final String key;

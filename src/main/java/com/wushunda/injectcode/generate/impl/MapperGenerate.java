@@ -1,6 +1,6 @@
 package com.wushunda.injectcode.generate.impl;
 
-import com.wushunda.injectcode.entity.TableFile;
+import com.wushunda.injectcode.tableFile.TableFile;
 import com.wushunda.injectcode.enums.ColumnKey;
 import com.wushunda.injectcode.generate.Generate;
 import com.wushunda.injectcode.generate.crudMethod;
@@ -52,17 +52,19 @@ public class MapperGenerate implements Generate, crudMethod {
     @Override
     public String create() {
         return String.format("    <insert id=\"create%s\" useGeneratedKeys=\"true\" keyProperty=\"%s\">\n" +
-                "        INSERT INTO %s (%s) VALUES(%s)\n" +
+                "        INSERT INTO %s (%s) \n" +
+                "        VALUES(%s)\n" +
                 "    </insert>", className, lineToHump(primaryKey), entityGenerate.getTableName(), getColumn(), getValues());
     }
 
     @Override
     public String createBatch() {
         return String.format("    <insert id=\"create%sBatch\" >\n" +
-                "        INSERT INTO %s (%s) VALUES\n" +
+                "        INSERT INTO %s (%s) \n" +
+                "        VALUES\n" +
                 "        <foreach collection =\"list\" item=\"%s\" separator =\",\">\n" +
                 "            (%s)\n" +
-                "         </foreach >\n" +
+                "        </foreach >\n" +
                 "    </insert>", className, entityGenerate.getTableName(), getColumn(),file,getValues());
     }
 
@@ -102,8 +104,8 @@ public class MapperGenerate implements Generate, crudMethod {
     @Override
     public String count() {
         return String.format("    <select id=\"get%sCount\" resultType=\"java.lang.Integer\">\n" +
-                "        select count(*)\n" +
-                "        from %s  \n" +
+                "        SELECT COUNT(*)\n" +
+                "        FROM %s  \n" +
                 "    </select>",className,entityGenerate.getTableName());
     }
 

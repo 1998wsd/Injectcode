@@ -1,7 +1,7 @@
 package com.wushunda.injectcode.jdbc;
 
 
-import com.wushunda.injectcode.entity.TableFile;
+import com.wushunda.injectcode.tableFile.TableFile;
 
 import java.sql.*;
 import java.util.ArrayList;
