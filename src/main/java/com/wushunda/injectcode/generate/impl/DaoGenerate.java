@@ -129,7 +129,7 @@ public class DaoGenerate implements JavaGenerate, crudMethod {
 
     @Override
     public String retrievePagination() {
-        return String.format("    %s get%sPagination(@Param(\"start\") Integer start , @Param(\"limit\") Integer limit);\n", className, className);
+        return String.format("    List<%s> get%sPagination(@Param(\"start\") Integer start , @Param(\"limit\") Integer limit);\n", className, className);
     }
 
     @Override

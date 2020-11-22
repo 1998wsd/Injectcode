@@ -226,7 +226,7 @@ public class MapperGenerate implements Generate, crudMethod {
         StringBuilder str = new StringBuilder("<set>\n");
         for (TableFile tableFile : entityGenerate.getTableFiles()) {
             str.append("            <if ").
-                    append(String.format("test=\"%s.%s != null AND %s.%s != ''\"",file,lineToHump(tableFile.getColumnName()),file,lineToHump(tableFile.getColumnName())))
+                    append(String.format("test=\"%s.%s != null and %s.%s != ''\"",file,lineToHump(tableFile.getColumnName()),file,lineToHump(tableFile.getColumnName())))
                     .append(">\n");
             str.append("            ").append(tableFile.getColumnName()).append(" = ")
                     .append("#{").append(file)
@@ -253,7 +253,7 @@ public class MapperGenerate implements Generate, crudMethod {
         for (TableFile tableFile : entityGenerate.getTableFiles()) {
             str.append(" ").append(tableFile.getColumnName()).append(" = ")
                     .append("#{").append(file).append(".")
-                    .append(lineToHump(tableFile.getColumnName())).append("}\n").append("               AND");
+                    .append(lineToHump(tableFile.getColumnName())).append("}\n").append("               and");
         }
         if (str.length() >= AND.length() && AND.equals(str.substring(str.length() - AND.length(), str.length()))) {
             str.delete(str.length() - AND.length(), str.length());
